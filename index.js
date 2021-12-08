@@ -2,6 +2,7 @@
 //aside class="filters-section">
 
 const filtersSection = document.querySelector('.filters-section')
+const mainSection = document.querySelector('main')
 
 
 function renderingFilterSection(){
@@ -77,8 +78,95 @@ function renderingFilterSection(){
     filtersSection.append(h2El, filterByTypeForm, filterByCityHeadingEl,  filterByCityForm)
 }
 
+function renderingMainsection(){
+    const h1el = document.createElement('h1')
+    h1el.textContent = 'List of Breweries'
+
+    const searchBarHeader = document.createElement('header')
+    searchBarHeader.setAttribute('class', 'search-bar')
+
+    const searchBreweriesForm = document.createElement('form')
+    searchBreweriesForm.setAttribute('id', 'search-breweries-form')
+    searchBreweriesForm.setAttribute('autocomplete', 'off')
+
+    const searchBreweriesLabel = document.createElement('label')
+    searchBreweriesLabel.setAttribute('for', '"search-breweries')
+
+    const h2LabelEL = document.createElement('h2')
+    h2LabelEL.textContent = 'Search breweries:'
+
+    searchBreweriesLabel.append(h2LabelEL)
+
+    const searchBreweriesInput = document.createElement('input')
+    searchBreweriesInput.setAttribute('id', 'search-breweries')
+    searchBreweriesInput.setAttribute('name','search-breweries')
+    searchBreweriesInput.setAttribute('type','text')
+
+    searchBreweriesForm.append(searchBreweriesLabel, searchBreweriesInput)
+    searchBarHeader.append(searchBreweriesForm)
+
+    const articleEL = document.createElement('article')
+
+    const breweriesListUl = document.createElement('ul')
+    breweriesListUl.setAttribute('class', 'breweries-list')
+    articleEL.append(breweriesListUl)
+
+    const liEL = document.createElement('li')
+    breweriesListUl.append(liEL)
+
+    const h2LiEl = document.createElement('h2')
+    h2LiEl.textContent= 'Snow Belt Brew'
+
+    const microDivEl = document.createElement('div')
+    microDivEl.setAttribute('class', 'type')
+    microDivEl.textContent = 'micro'
+
+    const addressSection = document.createElement('section')
+    addressSection.setAttribute('class', 'address')
+
+    const h3SectionEL = document.createElement('h3')
+    h3SectionEL.textContent = 'Address:'
+
+    const pSectionEL = document.createElement('p')
+    pSectionEL.textContent = '9511 Kile Rd:'
+
+    const pSectionEl2 = document.createElement('p')
+    const strongEl = document.createElement('strong')
+    strongEl.textContent = 'Chardon, 44024:'
+    pSectionEl2.append(strongEl)
+
+    addressSection.append(h3SectionEL,pSectionEL, pSectionEl2)
+
+    const phoneSection = document.createElement('section')
+    phoneSection.setAttribute('class', 'phone')
+
+    const h3PhoneSectionEL = document.createElement('h3')
+    h3PhoneSectionEL.textContent = 'Phone:'
+
+    const phoneSectionEL = document.createElement('p')
+    phoneSectionEL.textContent = 'N/A'
+
+    phoneSection.append(h3PhoneSectionEL, phoneSectionEL)
+
+    const linkSectionEl = document.createElement('section')
+    linkSectionEl.setAttribute('class', 'link')
+
+    const aLinkSectionEl = document.createElement ('a')
+    aLinkSectionEl.setAttribute('href', 'null')
+    aLinkSectionEl.setAttribute('target', ' _blank')
+    aLinkSectionEl.textContent = 'Visit Website'
+
+    linkSectionEl.append(aLinkSectionEl)
+
+
+    liEL.append(h2LiEl,microDivEl,addressSection,phoneSection,linkSectionEl)
+    mainSection.append(h1el,searchBarHeader, articleEL)
+}
+
+
 function render(){
     renderingFilterSection()
+    renderingMainsection()
 }
 
 render()
