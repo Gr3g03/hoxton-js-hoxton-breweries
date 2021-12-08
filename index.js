@@ -1,8 +1,18 @@
-// Write your code here
-//aside class="filters-section">
 
 const filtersSection = document.querySelector('.filters-section')
 const mainSection = document.querySelector('main')
+
+const state = {
+    breweries :[]
+}
+
+function getBreweriesFromServer() {
+
+    return fetch('https://api.openbrewerydb.org/breweries').then(function (resp) 
+    {
+        return resp.json()
+    })
+}
 
 
 function renderingFilterSection(){
@@ -168,5 +178,9 @@ function render(){
     renderingFilterSection()
     renderingMainsection()
 }
+
+getBreweriesFromServer().then(function(getBreweries){
+    state.breweries = getBreweries
+  })
 
 render()
