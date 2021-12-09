@@ -5,7 +5,7 @@ const mainSection = document.querySelector('main')
 const selectStateForm = document.querySelector('#select-state-form')
 
 const state = {
-    breweries :[],
+    breweries : [],
     selectedState: null,
     breweryTypes: ['micro', 'regional', 'brewpub'],
     selectedBreweryType: '',
@@ -23,24 +23,6 @@ function displayBreweries(){
   return breweriesToDisplay
 }
 
-function getBreweriesFromServer() {
-    return fetch(baseUrl).then(function (resp) 
-    {
-        return resp.json()
-    })
-}
-
-function getStateBreweriesFromServer(state){
-    return fetch(`${baseUrl}?by_state=${state}`)
-    .then(resp =>resp.json()
-)}
-
-function getCitiesFromState(){
-state.breweries.map(function(getcities){
-    return getcities.city
- })
-}
-
 function getCitiesFromBreweries (breweries) {
     let cities = []
   
@@ -52,6 +34,19 @@ function getCitiesFromBreweries (breweries) {
   
     return cities
   }
+
+function getBreweriesFromServer() {
+    return fetch(baseUrl).then(function (resp) 
+    {
+        return resp.json()
+    })
+}
+
+function getStateBreweriesFromServer(state){
+    return fetch(`${baseUrl}?by_state=${state}&per_page=20`).then(resp =>
+        resp.json()
+      )
+}
 
 function renderingFilterSection(){
     const filtersSection = document.createElement('aside')
@@ -99,15 +94,14 @@ function renderingFilterSection(){
     cleareAllBtn.setAttribute('class', 'clear-all-btn')
     cleareAllBtn.textContent = 'clear all'
 
-            
+   
     const filterByCityForm = document.createElement('form')
     filterByCityForm.setAttribute('id', 'filter-by-city-form')
      filterByCityForm.addEventListener('submit' , function(event){
         event.preventDefault()  
+       
             })
-
-    filterByCityForm.innerHTML =``
-
+            filterByCityForm.innerHTML =``
     const cities = getCitiesFromBreweries(state.breweries)
 
         for (const city of cities) {
@@ -234,9 +228,10 @@ function render(){
 function selectedStateForm(){
     selectStateForm.addEventListener('submit', function(event){
         event.preventDefault()
-        state.selectedState = selectStateForm['select-state'].value
+         state.selectedState = selectStateForm['select-state'].value
     
-getBreweriesFromServer(state.selectedState).then(function(getBreweries){
+        getStateBreweriesFromServer(state.selectedState)
+          .then(function(getBreweries){
     state.breweries = getBreweries
     render()
     })
@@ -248,4 +243,5 @@ function init(){
     render()
     selectedStateForm()
 }
+
 init()
