@@ -48,6 +48,19 @@ function getStateBreweriesFromServer(state){
       )
 }
 
+// // How to get the value of a select when it changes
+// filterByTypeSelect.addEventListener("change", function (){
+//     console.log(filterByTypeSelect.value)
+
+
+// How to get an array with only the selected cities
+// let selectedCities = []
+
+// for (const checkbox of city-checkbox) {
+//     if (checkbox.checked) selectedCities.push(checkbox.value)
+// }
+
+
 function renderingFilterSection(){
     const filtersSection = document.createElement('aside')
     filtersSection.setAttribute ('class', 'filters-section ')
@@ -80,6 +93,10 @@ function renderingFilterSection(){
     const optionEl4 = document.createElement  ('option')
     optionEl4.setAttribute  ('value', 'brewpub')
     optionEl4.textContent = 'Brewpub'
+
+    filterByTypeSelectEl.addEventListener("change", function (){
+        !state.breweryTypes == state.breweryTypes
+    })
 
     filterByTypeSelectEl.append(optionEl1, optionEl2, optionEl3, optionEl4)
     filterByTypeForm.append(filterByTypeLabelEl, h3El, filterByTypeSelectEl)
@@ -163,16 +180,18 @@ function renderingMainsection(){
     const breweriesListUl = document.createElement('ul')
     breweriesListUl.setAttribute('class', 'breweries-list')
     articleEL.append(breweriesListUl)
+    // articleEL.innerHTML = ``
+
+    for(const brewerie of state.breweries){
 
     const liEL = document.createElement('li')
-    breweriesListUl.append(liEL)
-
+   
     const h2LiEl = document.createElement('h2')
-    h2LiEl.textContent= 'Snow Belt Brew'
+    h2LiEl.textContent= brewerie.name
 
     const microDivEl = document.createElement('div')
     microDivEl.setAttribute('class', 'type')
-    microDivEl.textContent = 'micro'
+    microDivEl.textContent = brewerie.brewery_type
 
     const addressSection = document.createElement('section')
     addressSection.setAttribute('class', 'address')
@@ -181,11 +200,11 @@ function renderingMainsection(){
     h3SectionEL.textContent = 'Address:'
 
     const pSectionEL = document.createElement('p')
-    pSectionEL.textContent = '9511 Kile Rd:'
+    pSectionEL.textContent = brewerie.street
 
     const pSectionEl2 = document.createElement('p')
     const strongEl = document.createElement('strong')
-    strongEl.textContent = 'Chardon, 44024:'
+    strongEl.textContent = `${brewerie.city} , ${brewerie.postal_code}`
     pSectionEl2.append(strongEl)
 
     addressSection.append(h3SectionEL,pSectionEL, pSectionEl2)
@@ -197,7 +216,7 @@ function renderingMainsection(){
     h3PhoneSectionEL.textContent = 'Phone:'
 
     const phoneSectionEL = document.createElement('p')
-    phoneSectionEL.textContent = 'N/A'
+    phoneSectionEL.textContent = brewerie.phone
 
     phoneSection.append(h3PhoneSectionEL, phoneSectionEL)
 
@@ -207,15 +226,16 @@ function renderingMainsection(){
     const aLinkSectionEl = document.createElement ('a')
     aLinkSectionEl.setAttribute('href', 'null')
     aLinkSectionEl.setAttribute('target', ' _blank')
-    aLinkSectionEl.textContent = 'Visit Website'
+    aLinkSectionEl.textContent = brewerie.website_url
 
     linkSectionEl.append(aLinkSectionEl)
-
-
     liEL.append(h2LiEl,microDivEl,addressSection,phoneSection,linkSectionEl)
+    breweriesListUl.append(liEL)
+
+}
+   
     mainSection.append(h1el,searchBarHeader, articleEL)
 }
-
 
 
 
