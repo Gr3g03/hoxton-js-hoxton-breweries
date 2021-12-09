@@ -1,22 +1,62 @@
+const baseUrl = 'https://api.openbrewerydb.org/breweries'
 
-const filtersSection = document.querySelector('.filters-section')
+// const filtersSection = document.querySelector('.filters-section')
 const mainSection = document.querySelector('main')
+const selectStateForm = document.querySelector('#select-state-form')
 
 const state = {
-    breweries :[]
+    breweries :[],
+    selectedState: null,
+    breweryTypes: ['micro', 'regional', 'brewpub'],
+    selectedBreweryType: '',
+    selectedCities: []
+}
+
+function displayBreweries(){
+    let breweriesToDisplay = state.breweries
+    
+    breweriesToDisplay = breweriesToDisplay.filter(brewery =>
+        state.breweryTypes.includes(brewery.brewery_type)
+      )
+      breweriesToDisplay = breweriesToDisplay.slice(0, 10)
+
+  return breweriesToDisplay
 }
 
 function getBreweriesFromServer() {
-
-    return fetch('https://api.openbrewerydb.org/breweries').then(function (resp) 
+    return fetch(baseUrl).then(function (resp) 
     {
         return resp.json()
     })
 }
 
+function getStateBreweriesFromServer(state){
+    return fetch(`${baseUrl}?by_state=${state}`)
+    .then(resp =>resp.json()
+)}
+
+function getCitiesFromState(){
+state.breweries.map(function(getcities){
+    return getcities.city
+ })
+}
+
+function getCitiesFromBreweries (breweries) {
+    let cities = []
+  
+    for (const brewery of breweries) {
+      if (!cities.includes(brewery.city)) {
+        cities.push(brewery.city)
+      }
+    }
+  
+    return cities
+  }
 
 function renderingFilterSection(){
-    // filtersSection.innerHTML= ``
+    const filtersSection = document.createElement('aside')
+    filtersSection.setAttribute ('class', 'filters-section ')
+
     const h2El = document.createElement('h2')
     h2El.textContent = 'Filter By:'
 
@@ -59,33 +99,42 @@ function renderingFilterSection(){
     cleareAllBtn.setAttribute('class', 'clear-all-btn')
     cleareAllBtn.textContent = 'clear all'
 
+            
     const filterByCityForm = document.createElement('form')
     filterByCityForm.setAttribute('id', 'filter-by-city-form')
+     filterByCityForm.addEventListener('submit' , function(event){
+        event.preventDefault()  
+            })
 
+    filterByCityForm.innerHTML =``
+
+    const cities = getCitiesFromBreweries(state.breweries)
+
+        for (const city of cities) {
     const filterByCityInputEl = document.createElement('input')
     filterByCityInputEl.setAttribute('type', 'checkbox')
-    filterByCityInputEl.setAttribute('name', 'chardon')
-    filterByCityInputEl.setAttribute('value' ,'chardon')
-
+    filterByCityInputEl.setAttribute('class', 'city-checkbox')
+    filterByCityInputEl.setAttribute('name', city)
+    filterByCityInputEl.setAttribute('value' ,city)
+    filterByCityInputEl.setAttribute('id', city)
+        
     const filterByCitylabel1Form = document.createElement('label')
-    filterByCitylabel1Form.setAttribute('for', ' chardon')
-    filterByCitylabel1Form.textContent = 'Chardon'
+    filterByCitylabel1Form.setAttribute('for', city)
+    filterByCitylabel1Form.textContent = city
 
-    const filterByCityInput2El = document.createElement('input')
-    filterByCityInput2El.setAttribute('type', 'checkbox')
-    filterByCityInput2El.setAttribute('name', 'cincinnati')
-    filterByCityInput2El.setAttribute('value' ,'cincinnati')
+        if (state.breweries.length !== 0) {
+            filtersSection.style.display = 'block'
+        } else {
+            filtersSection.style.display = 'none'
 
-    const filterByCitylabel2Form = document.createElement('label')
-    filterByCitylabel2Form.setAttribute('for', ' cincinnati')
-    filterByCitylabel2Form.textContent = 'cincinnati'
+ }
+ filterByCityForm.append(filterByCityInputEl, filterByCitylabel1Form)
+}
 
-
-
-    filterByCityForm.append(filterByCityInputEl, filterByCitylabel1Form,filterByCityInput2El,filterByCitylabel2Form )
     filterByCityHeadingEl.append(h3CitiesEl, cleareAllBtn)
     filterByTypeLabelEl.append(h3El)
     filtersSection.append(h2El, filterByTypeForm, filterByCityHeadingEl,  filterByCityForm)
+    mainSection.append(filtersSection)
 }
 
 function renderingMainsection(){
@@ -174,13 +223,29 @@ function renderingMainsection(){
 }
 
 
+
+
+
 function render(){
     renderingFilterSection()
     renderingMainsection()
 }
 
-getBreweriesFromServer().then(function(getBreweries){
+function selectedStateForm(){
+    selectStateForm.addEventListener('submit', function(event){
+        event.preventDefault()
+        state.selectedState = selectStateForm['select-state'].value
+    
+getBreweriesFromServer(state.selectedState).then(function(getBreweries){
     state.breweries = getBreweries
-  })
+    render()
+    })
 
-render()
+  })
+}
+
+function init(){
+    render()
+    selectedStateForm()
+}
+init()
